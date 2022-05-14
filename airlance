@@ -1,0 +1,72 @@
+#!/usr/bin/env php
+<?php
+use yii\console\Application;
+
+// fcgi doesn't have STDIN and STDOUT defined by default
+defined('STDIN') or define('STDIN', fopen('php://stdin', 'r'));
+defined('STDOUT') or define('STDOUT', fopen('php://stdout', 'w'));
+
+defined('YII_DEBUG') or define('YII_DEBUG', true);
+defined('YII_ENV') or define('YII_ENV', 'dev');
+
+defined('ROOT_PATH') or define('ROOT_PATH', __DIR__);
+defined('VENDOR_PATH') or define('VENDOR_PATH', ROOT_PATH . '/vendor');
+
+require(VENDOR_PATH . '/autoload.php');
+require(VENDOR_PATH . '/yiisoft/yii2/Yii.php');
+
+Yii::setAlias('@Services', ROOT_PATH . '/services');
+
+$params = require_once ROOT_PATH . '/config/env.php';
+
+$config = [
+    'id' => 'console',
+    'bootstrap' => [
+        'log'
+    ],
+    'name' => 'Airlance',
+    'language'=>'ru-RU',
+    'timeZone'=>'Europe/Kiev',
+    'aliases' => [
+        '@bower' => '@vendor/bower-asset',
+        '@npm'   => '@vendor/npm-asset',
+    ],
+    'basePath' => ROOT_PATH,
+    'vendorPath' => VENDOR_PATH,
+    'modules' => [],
+    'components' => [
+        'db' => [
+            'class' => 'yii\db\Connection',
+            'charset' => 'utf8mb4',
+            'dsn' => 'mysql:host=localhost;dbname=testing',
+            'username' => $params['db.username'],
+            'password' => $params['db.password']
+        ],
+        'log' => [
+            'class' => 'yii\log\Dispatcher',
+            'targets' => [
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['error'],
+                    'logFile' => '@app/runtime/logs/console-error.log'
+                ]
+            ],
+            'traceLevel' => YII_DEBUG ? 3 : 0
+        ]
+    ],
+    'controllerMap' => [
+        'migrate' => [
+            'class' => 'Airlance\Framework\Console\MigrateController',
+            'migrationNamespaces' => [
+                'Services\AirHub\Migration'
+            ]
+        ],
+        'cron' => [
+            'class' => 'Airlance\Framework\Cron\JobController',
+        ]
+    ]
+];
+
+$application = new Application($config);
+$exitCode = $application->run();
+exit($exitCode);
