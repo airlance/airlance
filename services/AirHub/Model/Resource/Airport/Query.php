@@ -5,18 +5,16 @@ use yii\db\ActiveQuery;
 
 class Query extends ActiveQuery
 {
-    public function inCode($code)
+    public function inCode($code): Query
     {
         $this->where(['in', 'code', $code]);
 
         return $this;
     }
 
-    public function notInById($id, $operator)
+    public function notInCode($code): Query
     {
-        $this->where(['not in', 'id', $id])
-            ->andWhere(['=', 'operator_id', $operator])
-            ->andWhere(['=', 'status', 1]);
+        $this->where(['not in', 'code', $code]);
 
         return $this;
     }
