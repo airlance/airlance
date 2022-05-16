@@ -7,6 +7,7 @@ defined('YII_ENV') or define('YII_ENV', 'dev');
 defined('ROOT_PATH') or define('ROOT_PATH', dirname(__DIR__, 3));
 defined('PANEL_PATH') or define('PANEL_PATH', ROOT_PATH . '/sites/customerpanel');
 defined('VENDOR_PATH') or define('VENDOR_PATH', ROOT_PATH . '/vendor');
+defined('RUNTIME_PATH') or define('RUNTIME_PATH', ROOT_PATH . '/runtime');
 
 require(VENDOR_PATH . '/autoload.php');
 require(VENDOR_PATH . '/yiisoft/yii2/Yii.php');
@@ -18,6 +19,7 @@ $config = [
     'id' => 'app',
     'basePath' => PANEL_PATH,
     'vendorPath' => VENDOR_PATH,
+    'runtimePath' => RUNTIME_PATH,
     'controllerNamespace' => 'app\controllers',
     'components' => [
         'errorHandler' => [
@@ -58,7 +60,7 @@ $config = [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error'],
-                    'logFile' => PANEL_PATH . '/runtime/logs/panel-errors.log'
+                    'logFile' => RUNTIME_PATH . '/logs/panel-errors.log'
                 ]
             ],
             'traceLevel' => YII_DEBUG ? 3 : 0
