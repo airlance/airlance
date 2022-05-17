@@ -8,11 +8,10 @@ use yii\behaviors\TimestampBehavior;
  * Timeline
  *
  * @property int $id
- * @property int $operator_id
- * @property int $status
- * @property int $score
+ * @property string $object
+ * @property string $structure
  * @property string $description
- * @property string $arrival
+ * @property string $duration
  *
  * @author ReSoul <roberts.mark1985@gmail.com>
  * @since 1.0
@@ -27,16 +26,19 @@ class Timeline extends ActiveRecord
     public function behaviors()
     {
         return [
-            TimestampBehavior::class
+            [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => false
+            ]
         ];
     }
 
     public function rules()
     {
         return [
-            [['description', 'status', 'score'], 'required'],
-            [['operator_id', 'status', 'score'], 'integer'],
-            [['description', 'arrival'], 'string'],
+            [['description', 'structure', 'object'], 'required'],
+            [['description', 'object', 'structure', 'duration'], 'string'],
         ];
     }
 }
