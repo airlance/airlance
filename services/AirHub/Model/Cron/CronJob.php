@@ -1,9 +1,8 @@
 <?php
 namespace Services\AirHub\Model\Cron;
 
-use Services\AirHub\Model\DataObject\Timeline\Airport as TimelineAirport;
+use Services\AirHub\Model\Resource\Airport\CodeInterface;
 use Services\AirHub\Model\Resource\Timeline;
-use yii\helpers\Json;
 
 class CronJob
 {
@@ -25,7 +24,7 @@ class CronJob
         return sprintf("%.3f ms", round($this->time + $this->microseconds, 6));
     }
 
-    protected function getRecords(CronJobInterface $query, $codes, $callback = null): array
+    protected function getCodeRecords(CodeInterface $query, $codes, $callback = null): array
     {
         $data['totalCount'] = 0;
         $data['items'] = [];
@@ -50,13 +49,16 @@ class CronJob
         $this->structure[$category] = $data;
     }
 
-    protected function updateStats()
+    protected function updateStats($className)
     {
-        $timeline = new Timeline;
-        $timeline->setAttribute('description', implode('|', $this->msg));
-        $timeline->setAttribute('object', TimelineAirport::class);
-        $timeline->setAttribute('structure', Json::encode($this->structure));
-        $timeline->setAttribute('duration', $this->getElapsedTime());
-        $timeline->save(false);
+        if (!empty($this->msg)) {
+            $timeline = new Timeline;
+            $timeline->setAttribute('description', implode('|', $this->msg));
+            $timeline->setAttribute('object', $className);
+            $timeline->setAttribute('duration', $this->getElapsedTime());
+            if ($timeline->save(false)) {
+                $timeline->createJsonFile($this->structure);
+            }
+        }
     }
 }

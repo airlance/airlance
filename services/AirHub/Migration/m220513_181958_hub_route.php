@@ -19,6 +19,7 @@ class m220513_181958_hub_route extends Migration
             'operator_id' => $this->integer()->comment('Operator ID'),
             'departure' => $this->char(3)->notNull()->comment('Departure'),
             'arrival' => $this->char(3)->notNull()->comment('Arrival'),
+            'connecting_flight' => $this->smallInteger(1)->defaultValue(0)->comment('Connecting Flight'),
             'status' => $this->smallInteger(1)->defaultValue(1)->comment('Status'),
             'score' => $this->smallInteger(2)->defaultValue(1)->comment('Score')
         ], $this->tableOptions);

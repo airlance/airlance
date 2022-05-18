@@ -24,5 +24,21 @@ class m220513_181908_hub_operator extends Migration
             'created_at' => $this->integer()->comment('Created At'),
             'updated_at' => $this->integer()->comment('Updated At')
         ], $this->tableOptions);
+
+        $this->insertRecords();
+    }
+
+    protected function insertRecords()
+    {
+        $data = [
+            ['Ryanair', 'https://www.ryanair.com/', 96, 'Ireland', time(), time()],
+            ['Wizz Air', 'https://wizzair.com/', 91, 'Hungary', time(), time()],
+            ['Volotea', 'https://www.volotea.com/', 89, 'Spain', time(), time()]
+        ];
+
+        $this->getDb()
+            ->createCommand()
+            ->batchInsert($this->table, ['name', 'website', 'score', 'country', 'created_at', 'updated_at'], $data)
+            ->execute();
     }
 }

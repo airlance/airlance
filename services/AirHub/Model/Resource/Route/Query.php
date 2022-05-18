@@ -5,6 +5,15 @@ use yii\db\ActiveQuery;
 
 class Query extends ActiveQuery
 {
+    public function connection($operator, $departure, $arrival = [])
+    {
+        $this->where(['=', 'operator_id', $operator])
+            ->andWhere(['in', 'arrival', $arrival])
+            ->andWhere(['=', 'departure', $departure]);
+
+        return $this;
+    }
+
     public function route($departure, $arrival, $operator)
     {
         $this->where(['=', 'departure', $departure])

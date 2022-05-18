@@ -1,7 +1,7 @@
 <?php
-namespace Services\AirHub\Model\Cron;
+namespace Services\AirHub\Model\Resource\Airport;
 
-interface CronJobInterface
+interface CodeInterface
 {
     public function inCode($code);
 
